@@ -12,6 +12,7 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/ethereum/go-ethereum/common"
 	_ "github.com/lib/pq"
+	"github.com/mohae/deepcopy"
 	"github.com/sonm-io/core/blockchain"
 	"github.com/sonm-io/core/proto"
 	"github.com/sonm-io/core/util"
@@ -163,7 +164,9 @@ func (m *sqlStorage) GetDealByID(conn queryConn, dealID *big.Int) (*sonm.DWHDeal
 }
 
 func (m *sqlStorage) GetDeals(conn queryConn, r *sonm.DealsRequest) ([]*sonm.DWHDeal, uint64, error) {
-	builder := m.builder().Select("*").From("Deals")
+	builder := m.builder().
+		Select("ask.tag as ask_tag, bid.tag as bid_tag, *").
+		From("deals")
 
 	if r.Status > 0 {
 		builder = builder.Where("Status = ?", r.Status)
@@ -220,6 +223,10 @@ func (m *sqlStorage) GetDeals(conn queryConn, r *sonm.DealsRequest) ([]*sonm.DWH
 	if r.Offset > 0 {
 		builder = builder.Offset(r.Offset)
 	}
+
+	builder = builder.
+		LeftJoin("orders ask on deals.askid = ask.id").
+		LeftJoin("orders bid on deals.bidid = bid.id")
 
 	builder = m.builderWithSortings(builder, r.Sortings)
 	query, args, _ := m.builderWithOffsetLimit(builder, r.Limit, r.Offset).ToSql()
@@ -1325,8 +1332,12 @@ func (m *sqlStorage) decodeDeal(rows *sql.Rows) (*sonm.DWHDeal, error) {
 		supplierCertificates = &[]byte{}
 		consumerCertificates = &[]byte{}
 		activeChangeRequest  = new(bool)
+		askTag               = &[]byte{}
+		bidTag               = &[]byte{}
 	)
 	allFields := []interface{}{
+		askTag,
+		bidTag,
 		id,
 		supplierID,
 		consumerID,
@@ -1353,6 +1364,7 @@ func (m *sqlStorage) decodeDeal(rows *sql.Rows) (*sonm.DWHDeal, error) {
 		benchmarks[benchID] = new(uint64)
 		allFields = append(allFields, benchmarks[benchID])
 	}
+
 	if err := rows.Scan(allFields...); err != nil {
 		return nil, fmt.Errorf("failed to scan Deal row: %v", err)
 	}
@@ -1408,6 +1420,8 @@ func (m *sqlStorage) decodeDeal(rows *sql.Rows) (*sonm.DWHDeal, error) {
 		SupplierCertificates: *supplierCertificates,
 		ConsumerCertificates: *consumerCertificates,
 		ActiveChangeRequest:  *activeChangeRequest,
+		BidTag:               *bidTag,
+		AskTag:               *askTag,
 	}, nil
 }
 
@@ -1805,8 +1819,8 @@ func (c *sqlSetupCommands) setupTables(db *sql.DB) error {
 
 func (c *sqlSetupCommands) createIndices(db *sql.DB) error {
 	var err error
-	for _, column := range c.tablesInfo.DealColumns {
-		if err = c.createIndex(db, c.createIndexCmd, "Deals", column); err != nil {
+	for _, column := range c.tablesInfo.DealIdxColunm {
+		if err = c.createIndex(db, c.createIndexCmd, "deals", column); err != nil {
 			return err
 		}
 	}
@@ -1820,7 +1834,7 @@ func (c *sqlSetupCommands) createIndices(db *sql.DB) error {
 			return err
 		}
 	}
-	for _, column := range c.tablesInfo.OrderColumns {
+	for _, column := range c.tablesInfo.OrderIdxColumns {
 		if err = c.createIndex(db, c.createIndexCmd, "Orders", column); err != nil {
 			return err
 		}
@@ -1863,8 +1877,10 @@ func (c *sqlSetupCommands) createIndex(db *sql.DB, command, table, column string
 // tablesInfo is used to get static column names for tables with variable columns set (i.e., with benchmarks).
 type tablesInfo struct {
 	DealColumns              []string
+	DealIdxColunm            []string
 	NumDealColumns           uint64
 	OrderColumns             []string
+	OrderIdxColumns          []string
 	NumOrderColumns          uint64
 	DealConditionColumns     []string
 	DealChangeRequestColumns []string
@@ -1874,7 +1890,7 @@ type tablesInfo struct {
 
 func newTablesInfo(numBenchmarks uint64) *tablesInfo {
 	dealColumns := []string{
-		"Id",
+		"id",
 		"SupplierID",
 		"ConsumerID",
 		"MasterID",
@@ -1895,6 +1911,7 @@ func newTablesInfo(numBenchmarks uint64) *tablesInfo {
 		"ConsumerCertificates",
 		"ActiveChangeRequest",
 	}
+
 	orderColumns := []string{
 		"Id",
 		"MasterID",
@@ -1916,6 +1933,10 @@ func newTablesInfo(numBenchmarks uint64) *tablesInfo {
 		"CreatorCountry",
 		"CreatorCertificates",
 	}
+
+	dealIdxColumns := deepcopy.Copy(dealColumns).([]string)
+	orderIdxColumns := deepcopy.Copy(orderColumns).([]string)
+
 	dealChangeRequestColumns := []string{
 		"Id",
 		"CreatedTS",
@@ -1959,17 +1980,31 @@ func newTablesInfo(numBenchmarks uint64) *tablesInfo {
 	}
 	out := &tablesInfo{
 		DealColumns:              dealColumns,
+		DealIdxColunm:            dealIdxColumns,
 		NumDealColumns:           uint64(len(dealColumns)),
 		OrderColumns:             orderColumns,
+		OrderIdxColumns:          orderIdxColumns,
 		NumOrderColumns:          uint64(len(orderColumns)),
 		DealChangeRequestColumns: dealChangeRequestColumns,
 		DealConditionColumns:     dealConditionColumns,
 		ProfileColumns:           profileColumns,
 		ValidatorColumns:         validatorColumns,
 	}
+
+	for i := range dealColumns {
+		// add alias for queryable columns, it will give su
+		// ability to build multi-table queries.
+		dealColumns[i] = "deals." + dealColumns[i]
+	}
+
 	for benchmarkID := uint64(0); benchmarkID < numBenchmarks; benchmarkID++ {
-		out.DealColumns = append(out.DealColumns, getBenchmarkColumn(uint64(benchmarkID)))
-		out.OrderColumns = append(out.OrderColumns, getBenchmarkColumn(uint64(benchmarkID)))
+		col := getBenchmarkColumn(uint64(benchmarkID))
+
+		out.DealIdxColunm = append(out.DealIdxColunm, col)
+		out.DealColumns = append(out.DealColumns, "deals."+col)
+
+		out.OrderColumns = append(out.OrderColumns, "orders."+col)
+		out.OrderIdxColumns = append(out.OrderIdxColumns, col)
 	}
 
 	return out

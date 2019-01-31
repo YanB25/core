@@ -60,6 +60,15 @@ func newMarketClient(ctx context.Context) (sonm.MarketClient, error) {
 	return sonm.NewMarketClient(cc), nil
 }
 
+func newFakeMarketClient(ctx context.Context) (sonm.MarketClient, error) {
+	cc, err := xgrpc.NewClient(ctx, "localhost:8989", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return sonm.NewMarketClient(cc), nil
+}
+
 func newDealsClient(ctx context.Context) (sonm.DealManagementClient, error) {
 	cc, err := newClientConn(ctx)
 	if err != nil {

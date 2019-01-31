@@ -6,6 +6,7 @@ import (
 	"github.com/sonm-io/core/cmd/cli/task_config"
 	"github.com/sonm-io/core/proto"
 	"github.com/spf13/cobra"
+	"google.golang.org/grpc/metadata"
 )
 
 func init() {
@@ -33,7 +34,7 @@ var orderListCmd = &cobra.Command{
 		ctx, cancel := newTimeoutContext()
 		defer cancel()
 
-		market, err := newMarketClient(ctx)
+		market, err := newFakeMarketClient(ctx)
 		if err != nil {
 			return fmt.Errorf("сannot create client connection: %v", err)
 		}
@@ -57,7 +58,7 @@ var orderStatusCmd = &cobra.Command{
 		ctx, cancel := newTimeoutContext()
 		defer cancel()
 
-		market, err := newMarketClient(ctx)
+		market, err := newFakeMarketClient(ctx)
 		if err != nil {
 			return fmt.Errorf("cannot create client connection: %v", err)
 		}
@@ -81,7 +82,10 @@ var orderCreateCmd = &cobra.Command{
 		ctx, cancel := newTimeoutContext()
 		defer cancel()
 
-		market, err := newMarketClient(ctx)
+		addr, _ := keystore.GetDefaultAddress()
+		ctx = metadata.NewOutgoingContext(ctx, metadata.New(map[string]string{"from": addr.Hex()}))
+
+		market, err := newFakeMarketClient(ctx)
 		if err != nil {
 			return fmt.Errorf("cannot create client connection: %v", err)
 		}
@@ -110,7 +114,10 @@ var orderCancelCmd = &cobra.Command{
 		ctx, cancel := newTimeoutContext()
 		defer cancel()
 
-		market, err := newMarketClient(ctx)
+		addr, _ := keystore.GetDefaultAddress()
+		ctx = metadata.NewOutgoingContext(ctx, metadata.New(map[string]string{"from": addr.Hex()}))
+
+		market, err := newFakeMarketClient(ctx)
 		if err != nil {
 			return fmt.Errorf("cannot create client connection: %v", err)
 		}
@@ -143,7 +150,10 @@ var orderPurgeCmd = &cobra.Command{
 		ctx, cancel := newTimeoutContext()
 		defer cancel()
 
-		market, err := newMarketClient(ctx)
+		addr, _ := keystore.GetDefaultAddress()
+		ctx = metadata.NewOutgoingContext(ctx, metadata.New(map[string]string{"from": addr.Hex()}))
+
+		market, err := newFakeMarketClient(ctx)
 		if err != nil {
 			return fmt.Errorf("cannot create client connection: %v", err)
 		}
