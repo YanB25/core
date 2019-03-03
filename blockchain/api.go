@@ -564,7 +564,6 @@ func NewBasicMarket(address common.Address, token TokenAPI, opts *chainOpts) (Ma
 func txRetryWrapper(fn func() (*types.Transaction, error)) (*types.Transaction, error) {
 	var err error
 	var tx *types.Transaction
-
 	for i := 0; i < txRetryTimes; i++ {
 		tx, err = fn()
 
@@ -731,12 +730,10 @@ func (api *BasicMarketAPI) PlaceOrder(ctx context.Context, key *ecdsa.PrivateKey
 	if err != nil {
 		return nil, err
 	}
-
 	logs, err := WaitTxAndExtractLog(ctx, api.client, api.opts.blockConfirmations, api.opts.logParsePeriod, tx, OrderPlacedTopic)
 	if err != nil {
 		return nil, err
 	}
-
 	id, err := extractBig(logs.Topics, 1)
 	if err != nil {
 		return nil, err
@@ -1491,7 +1488,9 @@ func (api *BasicEventsAPI) getEventsTill(ctx context.Context, filter simpleFilte
 	ctxlog.S(ctx).Debugf("fetching events from %d till %d", filter.FromBlock, tillBlock)
 	for {
 		// we substract one, because of range inclusivity in FilterLogs call
-		filter.ToBlock = filter.FromBlock + api.blocksBatchSize - 1
+		// filter.ToBlock = filter.FromBlock + api.blocksBatchSize - 1
+		filter.ToBlock = filter.FromBlock + 10 - 1
+		ctxlog.S(ctx).Debugf("filter.ToBlock: ", filter.ToBlock, ";tillBlock: ", tillBlock)
 		if filter.ToBlock > tillBlock {
 			filter.ToBlock = tillBlock
 		}
@@ -1516,20 +1515,24 @@ func (api *BasicEventsAPI) fetchAndProcessLogs(ctx context.Context, filter simpl
 	}
 	var curBlock uint64
 	var curEventTS uint64
-	for _, log := range logs {
-		if log.BlockNumber != curBlock {
-			curBlock = log.BlockNumber
-			block, err := api.client.BlockByNumber(ctx, big.NewInt(0).SetUint64(curBlock))
-			if err != nil {
-				// TODO @aplodismerti: This place was changed, previously only log was written and old ts was used, is it right?
-				return fmt.Errorf("failed to get event timestamp for block %d: %s", curBlock, err)
+	if len(logs) == 0 {
+		filter.FromBlock = filter.ToBlock + 1
+	} else {
+		for _, log := range logs {
+			if log.BlockNumber != curBlock {
+				curBlock = log.BlockNumber
+				block, err := api.client.BlockByNumber(ctx, big.NewInt(0).SetUint64(curBlock))
+				if err != nil {
+					// TODO @aplodismerti: This place was changed, previously only log was written and old ts was used, is it right?
+					return fmt.Errorf("failed to get event timestamp for block %d: %s", curBlock, err)
+				}
+				curEventTS = block.Time().Uint64()
+				ctxlog.S(ctx).Debugf("switching to block %d", log.BlockNumber)
 			}
-			curEventTS = block.Time().Uint64()
-			ctxlog.S(ctx).Debugf("switching to block %d", log.BlockNumber)
+			api.processLog(log, curEventTS, receiver)
 		}
-		api.processLog(log, curEventTS, receiver)
+		ctxlog.S(ctx).Debugf("processed %d logs in blocks from %d to %d", len(logs), filter.FromBlock, filter.ToBlock)
 	}
-	ctxlog.S(ctx).Debugf("processed %d logs in blocks from %d to %d", len(logs), filter.FromBlock, filter.ToBlock)
 	return nil
 }
 

@@ -3,7 +3,8 @@ require('babel-polyfill');
 require('dotenv').config();
 let PrivateKeyProvider = require('truffle-privatekey-provider');
 
-let privateKey = '0000000000000000000000000000000000000000000000000000000000000000';
+// let privateKey = '0000000000000000000000000000000000000000000000000000000000000000';
+let privateKey = 'f72394ce4e4869821edb545c44a0d407267fbff890aa7368d53c7ff3ec309e6c';
 
 if (process.env.PRV_KEY !== undefined) {
     privateKey = process.env.PRV_KEY;
@@ -27,7 +28,7 @@ module.exports = {
     networks: {
         development: {
             host: 'localhost',
-            port: 8535,
+            port: 8545,
             network_id: '*', // eslint-disable-line camelcase
         },
         coverage: {
@@ -39,21 +40,28 @@ module.exports = {
         },
 
         master: {
-            provider: () => new PrivateKeyProvider(privateKey, masterchainEndpoint),
-            network_id: '1', // eslint-disable-line camelcase
+            // provider: () => new PrivateKeyProvider(privateKey, masterchainEndpoint),
+            host: 'localhost',
+            port: 8545,
+            network_id: '*', // eslint-disable-line camelcase
         },
         rinkeby: {
-            provider: () => new PrivateKeyProvider(privateKey, rinkebyEndpoint),
-            network_id: '4', // eslint-disable-line camelcase
+            // provider: () => new PrivateKeyProvider(privateKey, rinkebyEndpoint),
+            host: 'localhost',
+            network_id: '*', // eslint-disable-line camelcase
         },
 
         privateLive: {
-            provider: () => new PrivateKeyProvider(privateKey, sidechainEndpoint),
-            network_id: '444', // eslint-disable-line camelcase
+            // provider: () => new PrivateKeyProvider(privateKey, sidechainEndpoint),
+            host: 'localhost',
+            port: 8545,
+            network_id: '*', // eslint-disable-line camelcase
         },
         private: {
-            provider: () => new PrivateKeyProvider(privateKey, sidechainDevEndpoint),
-            network_id: '444', // eslint-disable-line camelcase
+            // provider: () => new PrivateKeyProvider(privateKey, sidechainDevEndpoint),
+            host: 'localhost',
+            port: 8545,
+            network_id: '*', // eslint-disable-line camelcase
         },
     },
     solc: {

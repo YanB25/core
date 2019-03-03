@@ -16,10 +16,10 @@ import (
 )
 
 // SimpleGatekeeperABI is the input ABI used to generate the binding from.
-const SimpleGatekeeperABI = "[{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"paid\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"transactionAmount\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"txNumber\",\"type\":\"uint256\"},{\"indexed\":true,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"PayInTx\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"txNumber\",\"type\":\"uint256\"},{\"indexed\":true,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"PayoutTx\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"block\",\"type\":\"uint256\"}],\"name\":\"Suicide\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"PayIn\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"},{\"name\":\"_txNumber\",\"type\":\"uint256\"}],\"name\":\"Payout\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"kill\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+const SimpleGatekeeperABI = "[{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"paid\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"transactionAmount\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"_token\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"txNumber\",\"type\":\"uint256\"},{\"indexed\":true,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"PayInTx\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"txNumber\",\"type\":\"uint256\"},{\"indexed\":true,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"PayoutTx\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"block\",\"type\":\"uint256\"}],\"name\":\"Suicide\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"}],\"name\":\"OwnershipRenounced\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"PayIn\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"},{\"name\":\"_txNumber\",\"type\":\"uint256\"}],\"name\":\"Payout\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"kill\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
 
 // SimpleGatekeeperBin is the compiled bytecode used for deploying new contracts.
-const SimpleGatekeeperBin = `0x6080604052600060025534801561001557600080fd5b506040516020806106b583398101604052516000805460018054600160a060020a03909416600160a060020a0319948516179055821633908117909216909117905561064f806100666000396000f3006080604052600436106100825763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166341c0e1b58114610087578063634235fc1461009e5780638da5cb5b146100c55780639fab56ac146100f6578063add89bb21461010e578063d942bffa1461013a578063f2fde38b14610161575b600080fd5b34801561009357600080fd5b5061009c610182565b005b3480156100aa57600080fd5b5061009c600160a060020a0360043516602435604435610319565b3480156100d157600080fd5b506100da61047f565b60408051600160a060020a039092168252519081900360200190f35b34801561010257600080fd5b5061009c60043561048e565b34801561011a57600080fd5b50610126600435610574565b604080519115158252519081900360200190f35b34801561014657600080fd5b5061014f610589565b60408051918252519081900360200190f35b34801561016d57600080fd5b5061009c600160a060020a036004351661058f565b60008054600160a060020a0316331461019a57600080fd5b600154604080517f70a082310000000000000000000000000000000000000000000000000000000081523060048201529051600160a060020a03909216916370a08231916024808201926020929091908290030181600087803b15801561020057600080fd5b505af1158015610214573d6000803e3d6000fd5b505050506040513d602081101561022a57600080fd5b505160015460008054604080517fa9059cbb000000000000000000000000000000000000000000000000000000008152600160a060020a03928316600482015260248101869052905194955092169263a9059cbb926044808201936020939283900390910190829087803b1580156102a157600080fd5b505af11580156102b5573d6000803e3d6000fd5b505050506040513d60208110156102cb57600080fd5b505115156102d857600080fd5b6040805142815290517fa1ea9b09ea114021983e9ecf71cf2ffddfd80f5cb4f925e5bf24f9bdb5e55fde9181900360200190a1600054600160a060020a0316ff5b60008054600160a060020a0316331461033157600080fd5b50604080516c01000000000000000000000000600160a060020a0386160281526014810183905260348101849052815190819003605401902060008181526003602052919091205460ff161561038657600080fd5b600154604080517fa9059cbb000000000000000000000000000000000000000000000000000000008152600160a060020a038781166004830152602482018790529151919092169163a9059cbb9160448083019260209291908290030181600087803b1580156103f557600080fd5b505af1158015610409573d6000803e3d6000fd5b505050506040513d602081101561041f57600080fd5b5051151561042c57600080fd5b600081815260036020526040808220805460ff191660011790555184918491600160a060020a038816917f731af16374848c2c73a6154fd410cb421138e7db45c5a904e5a475c756faa8d991a450505050565b600054600160a060020a031681565b600154604080517f23b872dd000000000000000000000000000000000000000000000000000000008152336004820152306024820152604481018490529051600160a060020a03909216916323b872dd916064808201926020929091908290030181600087803b15801561050157600080fd5b505af1158015610515573d6000803e3d6000fd5b505050506040513d602081101561052b57600080fd5b5051151561053857600080fd5b600280546001019081905560405182919033907f63768eabd21c026cb17439a3c6556436c1b0219c2046875297ad3f4b14e6700f90600090a450565b60036020526000908152604090205460ff1681565b60025481565b600054600160a060020a031633146105a657600080fd5b600160a060020a03811615156105bb57600080fd5b60008054604051600160a060020a03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a03929092169190911790555600a165627a7a723058208455575f9e51d88841569307171b552e8f84b5f482f06219a6cf960f384f47c80029`
+const SimpleGatekeeperBin = `0x6080604052600060025534801561001557600080fd5b506040516020806107c383398101604052516000805460018054600160a060020a03909416600160a060020a0319948516179055821633908117909216909117905561075d806100666000396000f30060806040526004361061008d5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166341c0e1b58114610092578063634235fc146100a9578063715018a6146100d05780638da5cb5b146100e55780639fab56ac14610116578063add89bb21461012e578063d942bffa1461015a578063f2fde38b14610181575b600080fd5b34801561009e57600080fd5b506100a76101a2565b005b3480156100b557600080fd5b506100a7600160a060020a0360043516602435604435610339565b3480156100dc57600080fd5b506100a7610515565b3480156100f157600080fd5b506100fa610581565b60408051600160a060020a039092168252519081900360200190f35b34801561012257600080fd5b506100a7600435610590565b34801561013a57600080fd5b50610146600435610676565b604080519115158252519081900360200190f35b34801561016657600080fd5b5061016f61068b565b60408051918252519081900360200190f35b34801561018d57600080fd5b506100a7600160a060020a0360043516610691565b60008054600160a060020a031633146101ba57600080fd5b600154604080517f70a082310000000000000000000000000000000000000000000000000000000081523060048201529051600160a060020a03909216916370a08231916024808201926020929091908290030181600087803b15801561022057600080fd5b505af1158015610234573d6000803e3d6000fd5b505050506040513d602081101561024a57600080fd5b505160015460008054604080517fa9059cbb000000000000000000000000000000000000000000000000000000008152600160a060020a03928316600482015260248101869052905194955092169263a9059cbb926044808201936020939283900390910190829087803b1580156102c157600080fd5b505af11580156102d5573d6000803e3d6000fd5b505050506040513d60208110156102eb57600080fd5b505115156102f857600080fd5b6040805142815290517fa1ea9b09ea114021983e9ecf71cf2ffddfd80f5cb4f925e5bf24f9bdb5e55fde9181900360200190a1600054600160a060020a0316ff5b60008054600160a060020a0316331461035157600080fd5b8382846040516020018084600160a060020a0316600160a060020a03166c0100000000000000000000000002815260140183815260200182815260200193505050506040516020818303038152906040526040518082805190602001908083835b602083106103d15780518252601f1990920191602091820191016103b2565b51815160209384036101000a6000190180199092169116179052604080519290940182900390912060008181526003909252929020549194505060ff1615915061041c905057600080fd5b600154604080517fa9059cbb000000000000000000000000000000000000000000000000000000008152600160a060020a038781166004830152602482018790529151919092169163a9059cbb9160448083019260209291908290030181600087803b15801561048b57600080fd5b505af115801561049f573d6000803e3d6000fd5b505050506040513d60208110156104b557600080fd5b505115156104c257600080fd5b600081815260036020526040808220805460ff191660011790555184918491600160a060020a038816917f731af16374848c2c73a6154fd410cb421138e7db45c5a904e5a475c756faa8d991a450505050565b600054600160a060020a0316331461052c57600080fd5b60008054604051600160a060020a03909116917ff8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c6482091a26000805473ffffffffffffffffffffffffffffffffffffffff19169055565b600054600160a060020a031681565b600154604080517f23b872dd000000000000000000000000000000000000000000000000000000008152336004820152306024820152604481018490529051600160a060020a03909216916323b872dd916064808201926020929091908290030181600087803b15801561060357600080fd5b505af1158015610617573d6000803e3d6000fd5b505050506040513d602081101561062d57600080fd5b5051151561063a57600080fd5b600280546001019081905560405182919033907f63768eabd21c026cb17439a3c6556436c1b0219c2046875297ad3f4b14e6700f90600090a450565b60036020526000908152604090205460ff1681565b60025481565b600054600160a060020a031633146106a857600080fd5b6106b1816106b4565b50565b600160a060020a03811615156106c957600080fd5b60008054604051600160a060020a03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a03929092169190911790555600a165627a7a72305820bc512404100f0882213ed9cb1a47dff9a0fb68c977e4378219e7e82fa514132e0029`
 
 // DeploySimpleGatekeeper deploys a new Ethereum contract, binding an instance of SimpleGatekeeper to it.
 func DeploySimpleGatekeeper(auth *bind.TransactOpts, backend bind.ContractBackend, _token common.Address) (common.Address, *types.Transaction, *SimpleGatekeeper, error) {
@@ -317,25 +317,178 @@ func (_SimpleGatekeeper *SimpleGatekeeperTransactorSession) Kill() (*types.Trans
 	return _SimpleGatekeeper.Contract.Kill(&_SimpleGatekeeper.TransactOpts)
 }
 
-// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
+// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
 //
-// Solidity: function transferOwnership(newOwner address) returns()
-func (_SimpleGatekeeper *SimpleGatekeeperTransactor) TransferOwnership(opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, error) {
-	return _SimpleGatekeeper.contract.Transact(opts, "transferOwnership", newOwner)
+// Solidity: function renounceOwnership() returns()
+func (_SimpleGatekeeper *SimpleGatekeeperTransactor) RenounceOwnership(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _SimpleGatekeeper.contract.Transact(opts, "renounceOwnership")
+}
+
+// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
+//
+// Solidity: function renounceOwnership() returns()
+func (_SimpleGatekeeper *SimpleGatekeeperSession) RenounceOwnership() (*types.Transaction, error) {
+	return _SimpleGatekeeper.Contract.RenounceOwnership(&_SimpleGatekeeper.TransactOpts)
+}
+
+// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
+//
+// Solidity: function renounceOwnership() returns()
+func (_SimpleGatekeeper *SimpleGatekeeperTransactorSession) RenounceOwnership() (*types.Transaction, error) {
+	return _SimpleGatekeeper.Contract.RenounceOwnership(&_SimpleGatekeeper.TransactOpts)
 }
 
 // TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
 //
-// Solidity: function transferOwnership(newOwner address) returns()
-func (_SimpleGatekeeper *SimpleGatekeeperSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
-	return _SimpleGatekeeper.Contract.TransferOwnership(&_SimpleGatekeeper.TransactOpts, newOwner)
+// Solidity: function transferOwnership(_newOwner address) returns()
+func (_SimpleGatekeeper *SimpleGatekeeperTransactor) TransferOwnership(opts *bind.TransactOpts, _newOwner common.Address) (*types.Transaction, error) {
+	return _SimpleGatekeeper.contract.Transact(opts, "transferOwnership", _newOwner)
 }
 
 // TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
 //
-// Solidity: function transferOwnership(newOwner address) returns()
-func (_SimpleGatekeeper *SimpleGatekeeperTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
-	return _SimpleGatekeeper.Contract.TransferOwnership(&_SimpleGatekeeper.TransactOpts, newOwner)
+// Solidity: function transferOwnership(_newOwner address) returns()
+func (_SimpleGatekeeper *SimpleGatekeeperSession) TransferOwnership(_newOwner common.Address) (*types.Transaction, error) {
+	return _SimpleGatekeeper.Contract.TransferOwnership(&_SimpleGatekeeper.TransactOpts, _newOwner)
+}
+
+// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
+//
+// Solidity: function transferOwnership(_newOwner address) returns()
+func (_SimpleGatekeeper *SimpleGatekeeperTransactorSession) TransferOwnership(_newOwner common.Address) (*types.Transaction, error) {
+	return _SimpleGatekeeper.Contract.TransferOwnership(&_SimpleGatekeeper.TransactOpts, _newOwner)
+}
+
+// SimpleGatekeeperOwnershipRenouncedIterator is returned from FilterOwnershipRenounced and is used to iterate over the raw logs and unpacked data for OwnershipRenounced events raised by the SimpleGatekeeper contract.
+type SimpleGatekeeperOwnershipRenouncedIterator struct {
+	Event *SimpleGatekeeperOwnershipRenounced // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *SimpleGatekeeperOwnershipRenouncedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(SimpleGatekeeperOwnershipRenounced)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(SimpleGatekeeperOwnershipRenounced)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *SimpleGatekeeperOwnershipRenouncedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *SimpleGatekeeperOwnershipRenouncedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// SimpleGatekeeperOwnershipRenounced represents a OwnershipRenounced event raised by the SimpleGatekeeper contract.
+type SimpleGatekeeperOwnershipRenounced struct {
+	PreviousOwner common.Address
+	Raw           types.Log // Blockchain specific contextual infos
+}
+
+// FilterOwnershipRenounced is a free log retrieval operation binding the contract event 0xf8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c64820.
+//
+// Solidity: event OwnershipRenounced(previousOwner indexed address)
+func (_SimpleGatekeeper *SimpleGatekeeperFilterer) FilterOwnershipRenounced(opts *bind.FilterOpts, previousOwner []common.Address) (*SimpleGatekeeperOwnershipRenouncedIterator, error) {
+
+	var previousOwnerRule []interface{}
+	for _, previousOwnerItem := range previousOwner {
+		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
+	}
+
+	logs, sub, err := _SimpleGatekeeper.contract.FilterLogs(opts, "OwnershipRenounced", previousOwnerRule)
+	if err != nil {
+		return nil, err
+	}
+	return &SimpleGatekeeperOwnershipRenouncedIterator{contract: _SimpleGatekeeper.contract, event: "OwnershipRenounced", logs: logs, sub: sub}, nil
+}
+
+// WatchOwnershipRenounced is a free log subscription operation binding the contract event 0xf8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c64820.
+//
+// Solidity: event OwnershipRenounced(previousOwner indexed address)
+func (_SimpleGatekeeper *SimpleGatekeeperFilterer) WatchOwnershipRenounced(opts *bind.WatchOpts, sink chan<- *SimpleGatekeeperOwnershipRenounced, previousOwner []common.Address) (event.Subscription, error) {
+
+	var previousOwnerRule []interface{}
+	for _, previousOwnerItem := range previousOwner {
+		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
+	}
+
+	logs, sub, err := _SimpleGatekeeper.contract.WatchLogs(opts, "OwnershipRenounced", previousOwnerRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(SimpleGatekeeperOwnershipRenounced)
+				if err := _SimpleGatekeeper.contract.UnpackLog(event, "OwnershipRenounced", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
 }
 
 // SimpleGatekeeperOwnershipTransferredIterator is returned from FilterOwnershipTransferred and is used to iterate over the raw logs and unpacked data for OwnershipTransferred events raised by the SimpleGatekeeper contract.

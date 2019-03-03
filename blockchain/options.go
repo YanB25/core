@@ -5,17 +5,28 @@ import (
 	"crypto/ecdsa"
 	"math/big"
 	"time"
+	// "fmt"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 )
 
 const (
-	defaultMasterchainEndpoint        = "https://mainnet.infura.io/00iTrs5PIy0uGODwcsrb"
-	defaultSidechainEndpoint          = "https://sidechain.livenet.sonm.com/"
-	defaultMasterchainGasPrice uint64 = 20000000000 // 20 Gwei
+	// master net
+	// defaultMasterchainEndpoint        = "https://mainnet.infura.io/00iTrs5PIy0uGODwcsrb"
+	// defaultSidechainEndpoint          = "https://sidechain.livenet.sonm.com/"
+
+	// dev net
+	// defaultSidechainEndpoint          = "https://sidechain-dev.sonm.com"
+
+	defaultMasterchainEndpoint        = "http://222.200.180.184:8545"
+	// defaultSidechainEndpoint          = "http://222.200.180.185:8545"
+	defaultSidechainEndpoint          = "http://222.200.180.185:8545"
+
+	defaultMasterchainGasPrice uint64 = 0 // 20000000000 // 20 Gwei
 	defaultSidechainGasPrice   uint64 = 0
-	defaultBlockConfirmations         = 5
+	// defaultBlockConfirmations         = 5
+	defaultBlockConfirmations         = 0
 	defaultLogParsePeriod             = time.Second
 	defaultMasterchainGasLimit        = 500000
 	defaultSidechainGasLimit          = 2000000
