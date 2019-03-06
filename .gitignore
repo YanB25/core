@@ -53,3 +53,5 @@ token.txt
 keys/state/
 
 /**/*.log
+/**/main-ethereum/*
+/**/side-ethereum/*
