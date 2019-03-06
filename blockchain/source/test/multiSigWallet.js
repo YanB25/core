@@ -82,15 +82,12 @@ contract('MultiSigWallet', async (accounts) => {
             describe('confirmations', () => {
                 it('confirmed has 2 confirmations', async () => {
                     let confirmations = await multisig.getConfirmations(txConfirmedId);
-                    assert.deepEqual(confirmations,
-                        ['0x6704fbfcd5ef766b287262fa2281c105d57246a6',
-                            '0x9e1ef1ec212f5dffb41d35d9e5c14054f26c6560']);
+                    assert.deepEqual(confirmations, [master1, master2]);
                 });
 
                 it('pending has 1 confirmation after submit', async () => {
                     let confirmations = await multisig.getConfirmations(txPendingId);
-                    assert.deepEqual(confirmations,
-                        ['0x6704fbfcd5ef766b287262fa2281c105d57246a6']);
+                    assert.deepEqual(confirmations, [master1]);
                 });
 
                 it('confirmations count of pending tx', async () => {
@@ -182,10 +179,7 @@ contract('MultiSigWallet', async (accounts) => {
                 let txId = tx.logs[0].args.transactionId;
                 await multisig.confirmTransaction(txId, { from: master2 });
                 let oAfter = await multisig.getOwners();
-                assert.deepEqual(oAfter,
-                    ['0x6704fbfcd5ef766b287262fa2281c105d57246a6',
-                        '0x9e1ef1ec212f5dffb41d35d9e5c14054f26c6560',
-                        '0xce42bdb34189a93c55de250e011c68faee374dd3']);
+                assert.deepEqual(oAfter, [master1, master2, masterReplacee]);
             });
 
             it('remove owner', async () => {
@@ -196,9 +190,7 @@ contract('MultiSigWallet', async (accounts) => {
                 await multisig.confirmTransaction(txId, { from: master2 });
 
                 let oAfter = await multisig.getOwners();
-                assert.deepEqual(oAfter,
-                    ['0x6704fbfcd5ef766b287262fa2281c105d57246a6',
-                        '0x9e1ef1ec212f5dffb41d35d9e5c14054f26c6560']);
+                assert.deepEqual(oAfter, [master1, master2]);
             });
 
             it('replace owner', async () => {
@@ -215,10 +207,7 @@ contract('MultiSigWallet', async (accounts) => {
                 await multisig.confirmTransaction(txReplaceId, { from: master2 });
 
                 let oAfter = await multisig.getOwners();
-                assert.deepEqual(oAfter,
-                    ['0x6704fbfcd5ef766b287262fa2281c105d57246a6',
-                        '0x9e1ef1ec212f5dffb41d35d9e5c14054f26c6560',
-                        '0x97a3fc5ee46852c1cf92a97b7bad42f2622267cc']);
+                assert.deepEqual(oAfter, [master1, master2, masterReplacer]);
             });
 
             it('remove owner in the middle of array', async () => {
@@ -229,9 +218,7 @@ contract('MultiSigWallet', async (accounts) => {
                 await multisig.confirmTransaction(txId, { from: masterReplacer });
 
                 let oAfter = await multisig.getOwners();
-                assert.deepEqual(oAfter,
-                    ['0x6704fbfcd5ef766b287262fa2281c105d57246a6',
-                        '0x97a3fc5ee46852c1cf92a97b7bad42f2622267cc']);
+                assert.deepEqual(oAfter, [master1, masterReplacer]);
 
                 // add master2 back
                 let addData = multisig.contract.addOwner.getData(master2);
@@ -261,9 +248,7 @@ contract('MultiSigWallet', async (accounts) => {
                 await multisig.submitTransaction(multisig.address, 0, addData,
                     { from: master1 });
                 let oAfter = await multisig.getOwners();
-                assert.deepEqual(oAfter,
-                    ['0x6704fbfcd5ef766b287262fa2281c105d57246a6',
-                        '0x9e1ef1ec212f5dffb41d35d9e5c14054f26c6560']);
+                assert.deepEqual(oAfter, [master1, master2]);
             });
         });
     });
