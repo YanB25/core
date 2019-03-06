@@ -1,18 +1,19 @@
 require('babel-register');
 require('babel-polyfill');
 require('dotenv').config();
-let PrivateKeyProvider = require('truffle-privatekey-provider');
+// let PrivateKeyProvider = require('truffle-privatekey-provider');
 
 // let privateKey = '0000000000000000000000000000000000000000000000000000000000000000';
-let privateKey = 'f72394ce4e4869821edb545c44a0d407267fbff890aa7368d53c7ff3ec309e6c';
+// let privateKey = 'f72394ce4e4869821edb545c44a0d407267fbff890aa7368d53c7ff3ec309e6c';
+// let privateKey;
 
-if (process.env.PRV_KEY !== undefined) {
-    privateKey = process.env.PRV_KEY;
-}
-let masterchainEndpoint = 'https://mainnet.infura.io/';
-let rinkebyEndpoint = 'https://rinkeby.infura.io/';
-let sidechainEndpoint = 'https://sidechain.livenet.sonm.com';
-let sidechainDevEndpoint = 'https://sidechain-dev.sonm.com';
+// if (process.env.PRV_KEY !== undefined) {
+//     privateKey = process.env.PRV_KEY;
+// }
+// let masterchainEndpoint = 'https://mainnet.infura.io/';
+// let rinkebyEndpoint = 'https://rinkeby.infura.io/';
+// let sidechainEndpoint = 'https://sidechain.livenet.sonm.com';
+// let sidechainDevEndpoint = 'https://sidechain-dev.sonm.com';
 
 let mochaConfig = {};
 if (process.env.BUILD_TYPE === 'CI') {
@@ -43,7 +44,7 @@ module.exports = {
             // provider: () => new PrivateKeyProvider(privateKey, masterchainEndpoint),
             host: 'localhost',
             port: 8545,
-            network_id: '*', // eslint-disable-line camelcase
+            network_id: '666', // eslint-disable-line camelcase
         },
         rinkeby: {
             // provider: () => new PrivateKeyProvider(privateKey, rinkebyEndpoint),
@@ -54,8 +55,8 @@ module.exports = {
         privateLive: {
             // provider: () => new PrivateKeyProvider(privateKey, sidechainEndpoint),
             host: 'localhost',
-            port: 8545,
-            network_id: '*', // eslint-disable-line camelcase
+            port: 7545,
+            network_id: '777', // eslint-disable-line camelcase
         },
         private: {
             // provider: () => new PrivateKeyProvider(privateKey, sidechainDevEndpoint),
