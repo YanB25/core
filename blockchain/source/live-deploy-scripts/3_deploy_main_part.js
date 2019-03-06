@@ -12,8 +12,8 @@ let AddressHashMap = artifacts.require('./AddressHashMap.sol');
 // filled before deploy
 // let SNMMasterchainAddress = '0x983f6d60db79ea8ca4eb9968c6aff8cfa04b3c63';
 // let GatekeeperMasterchainAddress = '0x125f1e37a45abf9b9894aefcb03d14d170d1489b';
-let SNMMasterchainAddress = '0x4225ddc38c57b0ef2debcdac8e87af05d9859940';
-let GatekeeperMasterchainAddress = '0x5ae73123990580bbb0830de67d8f47210ede7dca';
+let SNMMasterchainAddress = '0x262b83632a85c993259a47f9abba04f7315fd704';
+let GatekeeperMasterchainAddress = '0x57b116afaabbb6c27fadea695bd1e5c11846f80d';
 
 let MSOwners = [
     '0xdaec8F2cDf27aD3DF5438E5244aE206c5FcF7fCd',
@@ -26,8 +26,9 @@ let MSOwners = [
     '0xd43f262536e916a4a807d27080092f190e25d774',
     '0xdd8422eed7fe5f85ea8058d273d3f5c17ef41d1c',
 
-    '0xfa578b05fbd9e1e7c1e69d5add1113240d641bc2',
-    '0x56c8b9ab7a9594f2d60427fcedbff6ab63c43281',
+    '0x5c865774723bf00895b3620700998906e58085fe',
+    '0x29f3ea08889d7cc9f9d609850ff26b65a0315469',
+    '0x3864e7df9ff2c421dbfdb53ff8f19a640aa92e0a'
 ];
 
 let MSRequired = 1;
@@ -35,7 +36,7 @@ let benchmarksQuantity = 12;
 let netflagsQuantity = 3;
 
 // let Deployers = ['0x7aa5237e0f999a9853a9cc8c56093220142ce48e', '0xd9a43e16e78c86cf7b525c305f8e72723e0fab5e'];
-let Deployers = ['0xfa578b05fbd9e1e7c1e69d5add1113240d641bc2', '0x980469cf401238e6b1d333101a24cfad7736d708']
+let Deployers = ['0x5c865774723bf00895b3620700998906e58085fe', '0x29f3ea08889d7cc9f9d609850ff26b65a0315469']
 
 // main part
 
@@ -71,7 +72,7 @@ module.exports = function (deployer, network) {
             let oracle = await Oracle.deployed();
 
             // set price in Oracle
-            await oracle.setCurrentPrice('6244497036986155008', { gasPrice: 0 });
+            await oracle.setCurrentPrice('1', { gasPrice: 0 });
 
             // Transfer Oracle ownership to `Oracle` multisig
             oracle.transferOwnership(msOracle.address, { gasPrice: 0 });

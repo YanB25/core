@@ -1,6 +1,6 @@
 let GateMultisig = artifacts.require('./MultiSigWallet.sol');
 let GateKeeperLive = artifacts.require('./SimpleGatekeeperWithLimitLive.sol');
-let SNMMaster = artifacts.require('./SNM.sol')
+let SNMMaster = artifacts.require('./SNM.sol');
 
 let MSOwners = [
     '0xdaec8F2cDf27aD3DF5438E5244aE206c5FcF7fCd',
@@ -12,13 +12,17 @@ let MSOwners = [
     '0x7aa5237e0f999a9853a9cc8c56093220142ce48e',
     '0xd43f262536e916a4a807d27080092f190e25d774',
     '0xdd8422eed7fe5f85ea8058d273d3f5c17ef41d1c',
+
+    '0x29603ad75d6c9d04282b4b046c31527e5ed5b3ac',
+    '0xed8d41b14113f2f545e879939b0dfc5639838f3b',
+    '0xad0636e65ac989168a3b29ac82b38f3086bd35f8',
 ];
 
 let MSRequired = 1;
 // let freezingTime = 60 * 15;
 let freezingTime = 0;
 // let SNMMasterchainAddress = '0x983f6d60db79ea8ca4eb9968c6aff8cfa04b3c63';
-let SNMMasterchainAddress = '0x4225ddc38c57b0ef2debcdac8e87af05d9859940';
+// let SNMMasterchainAddress = '0x4225ddc38c57b0ef2debcdac8e87af05d9859940';
 // let actualGasPrice = 3000000000;
 let actualGasPrice = 0;
 
@@ -38,9 +42,9 @@ module.exports = function (deployer, network) {
             let gk = await GateKeeperLive.deployed();
 
             // 2.1) add keeper with 100k limit for testing
-            await gk.ChangeKeeperLimit('0xAfA5a3b6675024af5C6D56959eF366d6b1FBa0d4', 100000 * 1e18, { gasPrice: actualGasPrice }); // eslint-disable-line max-len
-            await gk.ChangeKeeperLimit('0xfa578b05fbd9e1e7c1e69d5add1113240d641bc2', 100000 * 1e18, { gasPrice: actualGasPrice }); // eslint-disable-line max-len
-            await gk.ChangeKeeperLimit('0x5ae73123990580bbb0830de67d8f47210ede7dca', 100000 * 1e18, { gasPrice: actualGasPrice }); // eslint-disable-line max-len
+            await gk.ChangeKeeperLimit('0x29603ad75d6c9d04282b4b046c31527e5ed5b3ac', 100000 * 1e18, { gasPrice: actualGasPrice }); // eslint-disable-line max-len
+            await gk.ChangeKeeperLimit('0xed8d41b14113f2f545e879939b0dfc5639838f3b', 100000 * 1e18, { gasPrice: actualGasPrice }); // eslint-disable-line max-len
+            await gk.ChangeKeeperLimit('0xad0636e65ac989168a3b29ac82b38f3086bd35f8', 100000 * 1e18, { gasPrice: actualGasPrice }); // eslint-disable-line max-len
 
             // 3) transfer Live Gatekeeper ownership to `GatekeeperLive` multisig
             await gk.transferOwnership(multisig.address, { gasPrice: actualGasPrice });

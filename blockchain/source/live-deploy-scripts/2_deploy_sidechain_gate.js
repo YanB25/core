@@ -13,8 +13,9 @@ let MSOwners = [
     '0xd43f262536e916a4a807d27080092f190e25d774',
     '0xdd8422eed7fe5f85ea8058d273d3f5c17ef41d1c',
 
-    '0xfa578b05fbd9e1e7c1e69d5add1113240d641bc2',
-    '0x56c8b9ab7a9594f2d60427fcedbff6ab63c43281',
+    '0x5c865774723bf00895b3620700998906e58085fe',
+    '0x29f3ea08889d7cc9f9d609850ff26b65a0315469',
+    '0x3864e7df9ff2c421dbfdb53ff8f19a640aa92e0a'
 ];
 
 let MSRequired = 1;
@@ -40,7 +41,7 @@ module.exports = function (deployer, network) {
             // await token.transfer(gk.address, 444 * 1e6 * 1e18, { gasPrice: 0 });
 
             // await token.transfer(gk.address, 440 * 1e6 * 1e18, { gasPrice: 0 });
-            await token.transfer('0xfa578b05fbd9e1e7c1e69d5add1113240d641bc2', 4 * 1e6 * 1e18, { gasPrice: 0 });
+            await token.transfer(gk.address, 4 * 1e6 * 1e18, { gasPrice: 0 });
             // await token.mint('0xfa578b05fbd9e1e7c1e69d5add1113240d641bc2', 4 * 1e6 * 1e18, { gasPrice: 0 });
 
             // 3.1): add keeper with 100k limit for testing
@@ -48,7 +49,8 @@ module.exports = function (deployer, network) {
             // local
             await gk.ChangeKeeperLimit('0xfa578b05fbd9e1e7c1e69d5add1113240d641bc2', 100000 * 1e18, { gasPrice: 0 }); // eslint-disable-line max-len
             // 172.18.196.12
-            await gk.ChangeKeeperLimit('0x980469cf401238e6b1d333101a24cfad7736d708', 100000 * 1e18, { gasPrice: 0 }); // eslint-disable-line max-len
+            await gk.ChangeKeeperLimit('0x5c865774723bf00895b3620700998906e58085fe', 100000 * 1e18, { gasPrice: 0 }); // eslint-disable-line max-len
+            await gk.ChangeKeeperLimit(gk.address, 100000 * 1e18, { gasPrice: 0 }); // eslint-disable-line max-len
 
             // 4) transfer Gatekeeper ownership to `Gatekeeper` multisig
             await gk.transferOwnership(multiSig.address, { gasPrice: 0 });
