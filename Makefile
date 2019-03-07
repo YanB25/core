@@ -77,7 +77,7 @@ LDFLAGS = -X github.com/sonm-io/core/cmd.AppVersion=$(FULL_VERSION)
 
 .PHONY: fmt vet test
 
-all: mock vet fmt build test
+all: mock build 
 
 build/worker:
 	@echo "+ $@"
