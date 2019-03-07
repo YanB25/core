@@ -56,6 +56,10 @@ liveSideDeploy:
 	${TRUFFLE} migrate --network privateLive
 	mv migrations live-deploy-scripts
 	mv tmp_dir migrations
+restore:
+	mv migrations live-deploy-scripts
+	mv tmp_dir migrations
+
 
 clean:
 	@rm -rf build
