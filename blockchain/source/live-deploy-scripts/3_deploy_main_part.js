@@ -12,8 +12,8 @@ let AddressHashMap = artifacts.require('./AddressHashMap.sol');
 // filled before deploy
 // let SNMMasterchainAddress = '0x983f6d60db79ea8ca4eb9968c6aff8cfa04b3c63';
 // let GatekeeperMasterchainAddress = '0x125f1e37a45abf9b9894aefcb03d14d170d1489b';
-let SNMMasterchainAddress = '0x262b83632a85c993259a47f9abba04f7315fd704';
-let GatekeeperMasterchainAddress = '0x57b116afaabbb6c27fadea695bd1e5c11846f80d';
+let SNMMasterchainAddress = '0x0c9ae20d70c972cba006fd347924f38954af2719';
+let GatekeeperMasterchainAddress = '0x40b8c0f6e16fe7d566d64a536a20f25abc82c83e';
 
 let MSOwners = [
     '0xdaec8F2cDf27aD3DF5438E5244aE206c5FcF7fCd',

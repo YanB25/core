@@ -18,7 +18,7 @@ import (
 func getBlockNumber() {
 	// client, err := blockchain.NewClient("https://sidechain-dev.sonm.com")
 	// client, err := blockchain.NewClient("http://222.200.180.185:8545")
-    client, err := blockchain.NewClient("http://localhost:8545")
+    client, err := blockchain.NewClient("http://localhost:7545")
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)
@@ -30,7 +30,7 @@ func getBlockNumber() {
 
 func placeOrder() {
 	// hexKey := "a5dd45e0810ca83e21f1063e6bf055bd13544398f280701cbfda1346bcf3ae64"
-    hexKey := "f72394ce4e4869821edb545c44a0d407267fbff890aa7368d53c7ff3ec309e6c"
+    hexKey := "4dcfde06f6c12ad57eaeb968ff52dc810678a99e85bc2b2379e25bd4b67d5f65"
 	prv, err := crypto.HexToECDSA(hexKey)
 	if err != nil {
 		log.Fatalln(err)
