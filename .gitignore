@@ -55,3 +55,4 @@ keys/state/
 /**/*.log
 /**/main-ethereum/*
 /**/side-ethereum/*
+blockchain/source/migration_artifacts/
