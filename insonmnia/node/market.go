@@ -7,7 +7,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/sonm-io/core/insonmnia/dwh"
-	"github.com/sonm-io/core/proto"
+	sonm "github.com/sonm-io/core/proto"
 	"github.com/sonm-io/core/util"
 	"github.com/sonm-io/core/util/xconcurrency"
 	"go.uber.org/zap"
@@ -55,6 +55,10 @@ func (m *marketAPI) CreateOrder(ctx context.Context, req *sonm.BidOrder) (*sonm.
 	knownBenchmarks := m.remotes.benchList.MapByCode()
 	givenBenchmarks := req.GetResources().GetBenchmarks()
 
+	fmt.Printf(
+		"DEBUG (insonmnia/node/market.go:CreateOrder)\nknownBenchmarks %v, givenBenchmarks %v\n",
+		knownBenchmarks, givenBenchmarks)
+
 	if len(givenBenchmarks) > len(knownBenchmarks) {
 		return nil, fmt.Errorf("benchmark list too large")
 	}
@@ -62,6 +66,8 @@ func (m *marketAPI) CreateOrder(ctx context.Context, req *sonm.BidOrder) (*sonm.
 	if req.GetIdentity() == sonm.IdentityLevel_UNKNOWN {
 		return nil, errors.New("identity level is required and should not be 0")
 	}
+
+	fmt.Printf("DEBUG (insonmnia/node/market.go:CreateOrder) len of knownBenchmarks is %d\n", len(knownBenchmarks))
 
 	benchmarksValues := make([]uint64, len(knownBenchmarks))
 	for code, value := range givenBenchmarks {
@@ -74,6 +80,7 @@ func (m *marketAPI) CreateOrder(ctx context.Context, req *sonm.BidOrder) (*sonm.
 	}
 
 	benchStruct, err := sonm.NewBenchmarks(benchmarksValues)
+	fmt.Printf("DEBUG (insonmnia/node/market.go:CreateOrder) Lastly sent Benchmarks is %v\n", benchStruct)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse benchmark values: %s", err)
 	}
