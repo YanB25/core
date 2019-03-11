@@ -54,15 +54,15 @@ contract SimpleGatekeeperWithLimitLive is Ownable {
 
     function FreezeKeeper(address _keeper) public {
         // check access of sender
-        require(keepers[msg.sender].dayLimit > 0);
+        require(keepers[msg.sender].dayLimit > 0, "SimpleGatekeeperWithLimitLive.FreezeKeeper require keepers[msg.sender].dayLimit > 0");
         // check that freezing keeper has limit
-        require(keepers[_keeper].dayLimit > 0);
+        require(keepers[_keeper].dayLimit > 0, "SimpleGatekeeperWithLimitLive.FreezeKeeper require keepers[_keeper].dayLimit > 0");
         keepers[_keeper].frozen = true;
         emit KeeperFreezed(_keeper);
     }
 
     function UnfreezeKeeper(address _keeper) public onlyOwner {
-        require(keepers[_keeper].dayLimit > 0);
+        require(keepers[_keeper].dayLimit > 0, "SimpleGatekeeperWithLimitLive.UnFreezeKeeper require keepers[msg.sender].dayLimit > 0");
         keepers[_keeper].frozen = false;
         emit KeeperUnfreezed(_keeper);
     }
@@ -75,24 +75,27 @@ contract SimpleGatekeeperWithLimitLive is Ownable {
 
     function Payout(address _to, uint256 _value, uint256 _txNumber) public {
         // check that keeper is not frozen
-        require(!keepers[msg.sender].frozen);
-        require(keepers[msg.sender].dayLimit > 0);
+        require(!keepers[msg.sender].frozen, "SimpleGatekeeperWithLimitLive.Payout require !keepers[msg.sender].frozen > 0");
+        require(keepers[msg.sender].dayLimit > 0, "SimpleGatekeeperWithLimitLive.Payout require keepers[msg.sender].dayLimit > 0");
 
         // bytes32 txHash = keccak256(_to, _txNumber, _value);
         bytes32 txHash = keccak256(abi.encodePacked(_to, _txNumber, _value));
 
         // check that transaction is not paid
-        require(!paid[txHash].paid);
+        require(!paid[txHash].paid, "SimpleGatekeeperWithLimitLive.Payout require !paid[txHash].paid");
 
         if (paid[txHash].commitTS == 0) {
             // check daylimit
-            require(underLimit(msg.sender, _value));
+            require(underLimit(msg.sender, _value), "SGWLLL.Payout require underLimit(msg.sender, _value)");
+            // solium-disable-next-line security/no-block-members
             paid[txHash].commitTS = block.timestamp;
             paid[txHash].keeper = msg.sender;
+            // solium-disable-next-line security/no-block-members
             emit CommitTx(_to, _txNumber, _value, block.timestamp);
         } else {
-            require(paid[txHash].keeper == msg.sender);
-            require(paid[txHash].commitTS + freezingTime <= block.timestamp);
+            require(paid[txHash].keeper == msg.sender, "SGWLL.Payout require paid[txHash].keeper == msg.sender");
+            // solium-disable-next-line security/no-block-members
+            require(paid[txHash].commitTS + freezingTime <= block.timestamp, "SGWLL.Payout require paid[txHash].commitTS + feezingTime <= block.timestamp");
             token.transfer(_to, _value);
             paid[txHash].paid = true;
             emit PayoutTx(_to, _txNumber, _value);
@@ -103,7 +106,7 @@ contract SimpleGatekeeperWithLimitLive is Ownable {
         freezingTime = _freezingTime;
     }
 
-    function GetFreezingTime() view public returns (uint256) {
+    function GetFreezingTime() public view returns (uint256) {
         return freezingTime;
     }
 
@@ -130,8 +133,8 @@ contract SimpleGatekeeperWithLimitLive is Ownable {
 
     function kill() public onlyOwner {
         token.transfer(owner, token.balanceOf(address(this)));
+        // solium-disable-next-line security/no-block-members
         emit Suicide(block.timestamp);
-        // solium-disable-line security/no-block-members
         selfdestruct(owner);
     }
 
