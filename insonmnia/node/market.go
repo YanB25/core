@@ -29,11 +29,14 @@ func (m *marketAPI) GetOrders(ctx context.Context, req *sonm.Count) (*sonm.GetOr
 		AuthorID: sonm.NewEthAddress(crypto.PubkeyToAddress(m.remotes.key.PublicKey)),
 		Limit:    req.GetCount(),
 	}
+	fmt.Println("DEBUG: filter is %v\n", filter)
 
 	orders, err := m.remotes.dwh.GetOrders(ctx, filter)
+
 	if err != nil {
 		return nil, fmt.Errorf("could not get orders from DWH: %s", err)
 	}
+	fmt.Println("DEBUG: get order succeeds")
 
 	reply := &sonm.GetOrdersReply{Orders: []*sonm.Order{}}
 	for _, order := range orders.GetOrders() {
