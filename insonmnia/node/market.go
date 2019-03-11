@@ -22,6 +22,7 @@ type marketAPI struct {
 }
 
 func (m *marketAPI) GetOrders(ctx context.Context, req *sonm.Count) (*sonm.GetOrdersReply, error) {
+	fmt.Println("DEBUG: called GetOrders in insonmnia/node/market.go")
 	filter := &sonm.OrdersRequest{
 		Type:     sonm.OrderType_BID,
 		Status:   sonm.OrderStatus_ORDER_ACTIVE,
@@ -43,7 +44,11 @@ func (m *marketAPI) GetOrders(ctx context.Context, req *sonm.Count) (*sonm.GetOr
 }
 
 func (m *marketAPI) GetOrderByID(ctx context.Context, req *sonm.ID) (*sonm.Order, error) {
+	fmt.Println("DEBUG: called GetOrderBYID in insonmnia/node/market.go")
+
 	id, err := util.ParseBigInt(req.GetId())
+	fmt.Printf("DEBUG: got id %v and error %v\n", id, err)
+
 	if err != nil {
 		return nil, fmt.Errorf("could not get parse order id %s to BigInt: %s", req.GetId(), err)
 	}
@@ -55,9 +60,9 @@ func (m *marketAPI) CreateOrder(ctx context.Context, req *sonm.BidOrder) (*sonm.
 	knownBenchmarks := m.remotes.benchList.MapByCode()
 	givenBenchmarks := req.GetResources().GetBenchmarks()
 
-	fmt.Printf(
-		"DEBUG (insonmnia/node/market.go:CreateOrder)\nknownBenchmarks %v, givenBenchmarks %v\n",
-		knownBenchmarks, givenBenchmarks)
+	// fmt.Printf(
+	// 	"DEBUG (insonmnia/node/market.go:CreateOrder)\nknownBenchmarks %v, givenBenchmarks %v\n",
+	// 	knownBenchmarks, givenBenchmarks)
 
 	if len(givenBenchmarks) > len(knownBenchmarks) {
 		return nil, fmt.Errorf("benchmark list too large")
@@ -67,7 +72,7 @@ func (m *marketAPI) CreateOrder(ctx context.Context, req *sonm.BidOrder) (*sonm.
 		return nil, errors.New("identity level is required and should not be 0")
 	}
 
-	fmt.Printf("DEBUG (insonmnia/node/market.go:CreateOrder) len of knownBenchmarks is %d\n", len(knownBenchmarks))
+	// fmt.Printf("DEBUG (insonmnia/node/market.go:CreateOrder) len of knownBenchmarks is %d\n", len(knownBenchmarks))
 
 	benchmarksValues := make([]uint64, len(knownBenchmarks))
 	for code, value := range givenBenchmarks {
@@ -80,7 +85,7 @@ func (m *marketAPI) CreateOrder(ctx context.Context, req *sonm.BidOrder) (*sonm.
 	}
 
 	benchStruct, err := sonm.NewBenchmarks(benchmarksValues)
-	fmt.Printf("DEBUG (insonmnia/node/market.go:CreateOrder) Lastly sent Benchmarks is %v\n", benchStruct)
+	// fmt.Printf("DEBUG (insonmnia/node/market.go:CreateOrder) Lastly sent Benchmarks is %v\n", benchStruct)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse benchmark values: %s", err)
 	}
