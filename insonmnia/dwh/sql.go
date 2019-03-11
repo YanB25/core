@@ -13,7 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	_ "github.com/lib/pq"
 	"github.com/sonm-io/core/blockchain"
-	"github.com/sonm-io/core/proto"
+	sonm "github.com/sonm-io/core/proto"
 	"github.com/sonm-io/core/util"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -293,13 +293,19 @@ func (m *sqlStorage) InsertOrder(conn queryConn, order *sonm.DWHOrder) error {
 		order.CreatorCountry,
 		[]byte(order.CreatorCertificates),
 	}
+
+	fmt.Println("DEBUG: insonmnia/dwh/sql.go InsertOrder called")
+	fmt.Printf("DEBUG: insonmnia/dwh/sql.go values is %v\n", value)
+
 	benchmarks := order.GetOrder().GetBenchmarks().GetNValues(m.numBenchmarks)
+
 	for idx, benchmarkValue := range benchmarks {
 		if benchmarkValue >= MaxBenchmark {
 			return fmt.Errorf("order benchmark %d is greater than %d", idx, MaxBenchmark)
 		}
 		values = append(values, benchmarkValue)
 	}
+
 	query, args, _ := m.builder().Insert("Orders").Columns(m.tablesInfo.OrderColumns...).Values(values...).ToSql()
 	_, err := conn.Exec(query, args...)
 	return err
