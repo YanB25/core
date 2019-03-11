@@ -29,7 +29,7 @@ func (m *marketAPI) GetOrders(ctx context.Context, req *sonm.Count) (*sonm.GetOr
 		AuthorID: sonm.NewEthAddress(crypto.PubkeyToAddress(m.remotes.key.PublicKey)),
 		Limit:    req.GetCount(),
 	}
-	fmt.Println("DEBUG: filter is %v\n", filter)
+	fmt.Printf("DEBUG: filter is %v\n", filter)
 
 	orders, err := m.remotes.dwh.GetOrders(ctx, filter)
 
