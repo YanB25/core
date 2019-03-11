@@ -150,7 +150,14 @@ contract Market is Ownable, Pausable {
 
     // INIT
 
-    constructor(address _token, address _blacklist, address _oracle, address _profileRegistry, uint _benchmarksQuantity, uint _netflagsQuantity) public {
+    constructor(
+        address _token, 
+        address _blacklist, 
+        address _oracle, 
+        address _profileRegistry, 
+        uint _benchmarksQuantity, 
+        uint _netflagsQuantity) public {
+
         token = SNM(_token);
         bl = Blacklist(_blacklist);
         oracle = OracleUSD(_oracle);
@@ -173,14 +180,22 @@ contract Market is Ownable, Pausable {
         address _blacklist,
         bytes32 _tag,
         uint64[] _benchmarks
-    ) whenNotPaused public returns (uint){
+    ) public whenNotPaused returns (uint){
 
-        require(_identityLevel >= ProfileRegistry.IdentityLevel.ANONYMOUS);
-        require(_netflags.length <= netflagsQuantity);
-        require(_benchmarks.length <= benchmarksQuantity);
+        require(
+            _identityLevel >= ProfileRegistry.IdentityLevel.ANONYMOUS,
+            "Market.Place Order require _identityLevel >= ProfileRegistry.IdentityLevel.ANONYMOUS");
+        require(
+            _netflags.length <= netflagsQuantity,
+            "Market.Place Order require _netflags.length <= netflagsQuantity");
+        require(
+            _benchmarks.length <= benchmarksQuantity,
+            "Market.PlaceOrder require _benchmarks.length <= benchmarksQuantity");
 
         for (uint i = 0; i < _benchmarks.length; i++) {
-            require(_benchmarks[i] < MAX_BENCHMARKS_VALUE);
+            require(
+                _benchmarks[i] < MAX_BENCHMARKS_VALUE,
+                "Market.PlaceOrder require ALL THE i: _benchmarks[i] < MAX_BENCHMARKS_VALUE");
         }
 
         uint lockedSum = 0;
@@ -194,7 +209,9 @@ contract Market is Ownable, Pausable {
                 lockedSum = CalculatePayment(_price, 1 days);
             }
             // this line contains err.
-            require(token.transferFrom(msg.sender, this, lockedSum));
+            require(
+                token.transferFrom(msg.sender, this, lockedSum),
+                "Market.PlaceOrder require token.transferFrom(msg.sender, this, lockedSum)");
         }
 
         ordersAmount = ordersAmount.add(1);
@@ -221,11 +238,15 @@ contract Market is Ownable, Pausable {
     }
 
     function CancelOrder(uint orderID) public returns (bool){
-        require(orderID <= ordersAmount);
-        require(orders[orderID].orderStatus == OrderStatus.ORDER_ACTIVE);
-        require(orders[orderID].author == msg.sender);
+        require(
+            orderID <= ordersAmount);
+        require(
+            orders[orderID].orderStatus == OrderStatus.ORDER_ACTIVE);
+        require(
+            orders[orderID].author == msg.sender);
 
-        require(token.transfer(msg.sender, orders[orderID].frozenSum));
+        require(
+            token.transfer(msg.sender, orders[orderID].frozenSum));
         orders[orderID].orderStatus = OrderStatus.ORDER_INACTIVE;
 
         emit OrderUpdated(orderID);
@@ -234,13 +255,18 @@ contract Market is Ownable, Pausable {
 
     function QuickBuy(uint askID, uint buyoutDuration) public whenNotPaused {
         Order memory ask = orders[askID];
-        require(ask.orderType == OrderType.ORDER_ASK);
-        require(ask.orderStatus == OrderStatus.ORDER_ACTIVE);
+        require(
+            ask.orderType == OrderType.ORDER_ASK);
+        require(
+            ask.orderStatus == OrderStatus.ORDER_ACTIVE);
 
-        require(ask.duration >= buyoutDuration);
+        require(
+            ask.duration >= buyoutDuration);
         require(pr.GetProfileLevel(msg.sender) >= ask.identityLevel);
-        require(bl.Check(msg.sender, GetMaster(ask.author)) == false && bl.Check(ask.author, msg.sender) == false);
-        require(bl.Check(ask.blacklist, msg.sender) == false);
+        require(
+            bl.Check(msg.sender, GetMaster(ask.author)) == false && bl.Check(ask.author, msg.sender) == false);
+        require(
+            bl.Check(ask.blacklist, msg.sender) == false);
 
         PlaceOrder(
             OrderType.ORDER_BID,
@@ -262,7 +288,8 @@ contract Market is Ownable, Pausable {
         Order memory ask = orders[_askID];
         Order memory bid = orders[_bidID];
 
-        require(ask.orderStatus == OrderStatus.ORDER_ACTIVE && bid.orderStatus == OrderStatus.ORDER_ACTIVE);
+        require(
+            ask.orderStatus == OrderStatus.ORDER_ACTIVE && bid.orderStatus == OrderStatus.ORDER_ACTIVE);
         require((ask.counterparty == 0x0 || ask.counterparty == GetMaster(bid.author)) && (bid.counterparty == 0x0 || bid.counterparty == GetMaster(ask.author)));
         require(ask.orderType == OrderType.ORDER_ASK);
         require(bid.orderType == OrderType.ORDER_BID);
@@ -325,13 +352,17 @@ contract Market is Ownable, Pausable {
             endTime = startTime.add(bid.duration);
         }
         uint blockedBalance = bid.frozenSum;
-        deals[dealAmount] = Deal(ask.benchmarks, ask.author, bid.author, master, _askID, _bidID, bid.duration, ask.price, startTime, endTime, DealStatus.STATUS_ACCEPTED, blockedBalance, 0, block.timestamp);
+        deals[dealAmount] = Deal(
+            ask.benchmarks, ask.author, bid.author, 
+            master, _askID, _bidID, bid.duration, ask.price, startTime, endTime, DealStatus.STATUS_ACCEPTED, 
+            blockedBalance, 0, block.timestamp);
         emit DealOpened(dealAmount);
     }
 
     function CloseDeal(uint dealID, BlacklistPerson blacklisted) public returns (bool){
-        require((deals[dealID].status == DealStatus.STATUS_ACCEPTED));
-        require(msg.sender == deals[dealID].supplierID || msg.sender == deals[dealID].consumerID || msg.sender == deals[dealID].masterID);
+        require(deals[dealID].status == DealStatus.STATUS_ACCEPTED, "d");
+        require(
+            msg.sender == deals[dealID].supplierID || msg.sender == deals[dealID].consumerID || msg.sender == deals[dealID].masterID, "2");
 
         if (block.timestamp <= deals[dealID].startTime.add(deals[dealID].duration)) {
             // after endTime
@@ -519,7 +550,7 @@ contract Market is Ownable, Pausable {
     }
 
 
-    function GetOrderParams(uint orderID) view public
+    function GetOrderParams(uint orderID) public view 
     returns (
         OrderStatus orderStatus,
         uint dealID
@@ -531,7 +562,7 @@ contract Market is Ownable, Pausable {
         );
     }
 
-    function GetDealInfo(uint dealID) view public
+    function GetDealInfo(uint dealID) public view
     returns (
         uint64[] benchmarks,
         address supplierID,
@@ -553,7 +584,7 @@ contract Market is Ownable, Pausable {
         );
     }
 
-    function GetDealParams(uint dealID) view public
+    function GetDealParams(uint dealID) public view
     returns (
         uint duration,
         uint price,
@@ -574,7 +605,7 @@ contract Market is Ownable, Pausable {
         );
     }
 
-    function GetMaster(address _worker) view public returns (address master) {
+    function GetMaster(address _worker) public view returns (address master) {
         if (masterOf[_worker] == 0x0 || masterOf[_worker] == _worker) {
             master = _worker;
         } else {
@@ -582,7 +613,7 @@ contract Market is Ownable, Pausable {
         }
     }
 
-    function GetChangeRequestInfo(uint changeRequestID) view public
+    function GetChangeRequestInfo(uint changeRequestID) public view
     returns (
         uint dealID,
         OrderType requestType,
@@ -753,17 +784,17 @@ contract Market is Ownable, Pausable {
 
     // SETTERS
 
-    function SetProfileRegistryAddress(address _newPR) onlyOwner public returns (bool) {
+    function SetProfileRegistryAddress(address _newPR) public onlyOwner returns (bool) {
         pr = ProfileRegistry(_newPR);
         return true;
     }
 
-    function SetBlacklistAddress(address _newBL) onlyOwner public returns (bool) {
+    function SetBlacklistAddress(address _newBL) public onlyOwner returns (bool) {
         bl = Blacklist(_newBL);
         return true;
     }
 
-    function SetOracleAddress(address _newOracle) onlyOwner public returns (bool) {
+    function SetOracleAddress(address _newOracle) public onlyOwner returns (bool) {
         require(OracleUSD(_newOracle).getCurrentPrice() != 0);
         oracle = OracleUSD(_newOracle);
         return true;

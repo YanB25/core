@@ -15,12 +15,12 @@ contract OracleUSD is Ownable {
     }
 
     function setCurrentPrice(uint _price) public onlyOwner{
-        require(_price > 0);
+        require(_price > 0, "OracleUSD.setCurrentPrice require _price > 0");
         currentPrice = _price;
         emit PriceChanged(_price);
     }
 
-    function getCurrentPrice() view public returns (uint){
+    function getCurrentPrice() public view returns (uint){
         return currentPrice;
     }
 }

@@ -24,7 +24,7 @@ contract SimpleGatekeeper is Ownable {
     event Suicide(uint block);
 
     function PayIn(uint256 _value) public {
-        require(token.transferFrom(msg.sender, this, _value));
+        require(token.transferFrom(msg.sender, this, _value), "SG.PayIn require token.transferFrom(msg.sender, this, _value)");
         transactionAmount = transactionAmount + 1;
         emit PayInTx(msg.sender, transactionAmount, _value);
     }
@@ -32,15 +32,15 @@ contract SimpleGatekeeper is Ownable {
     function Payout(address _to, uint256 _value, uint256 _txNumber) public onlyOwner{
         // bytes32 txHash = keccak256(_to, _txNumber, _value);
         bytes32 txHash = keccak256(abi.encodePacked(_to, _txNumber, _value));
-        require(!paid[txHash]);
-        require(token.transfer(_to, _value));
+        require(!paid[txHash], "SG.Payout require !paid[txHash]");
+        require(token.transfer(_to, _value), "SG.Payout require token.transfer(_to, _value)");
         paid[txHash] = true;
         emit PayoutTx(_to, _txNumber, _value);
     }
 
     function kill() public onlyOwner{
         uint balance = token.balanceOf(this);
-        require(token.transfer(owner, balance));
+        require(token.transfer(owner, balance), "SG.kill require token.transfer(owner, balance)");
         emit Suicide(block.timestamp); // solium-disable-line security/no-block-members
         selfdestruct(owner);
     }
