@@ -19,12 +19,12 @@ contract TestnetFaucet is Ownable {
         return true;
     }
 
-    function mintToken(address target, uint256 mintedAmount) onlyOwner public returns (bool){
+    function mintToken(address target, uint256 mintedAmount) public onlyOwner returns (bool){
         token.mint(target, mintedAmount);
         return true;
     }
 
-    function() payable public{
+    function() public payable{
         getTokens();
     }
 
