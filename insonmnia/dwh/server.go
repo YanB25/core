@@ -313,10 +313,14 @@ func (m *DWH) GetDealConditions(ctx context.Context, request *sonm.DealCondition
 }
 
 func (m *DWH) GetOrders(ctx context.Context, request *sonm.OrdersRequest) (*sonm.DWHOrdersReply, error) {
+	fmt.Println("DEBUG: insonmnia/dwh/server.go GetOrders called")
+	fmt.Printf("DEBUG: the request is %v\n", request)
+
 	conn := newSimpleConn(m.db)
 	defer conn.Finish()
 
 	orders, count, err := m.storage.GetOrders(conn, request)
+	fmt.Println("DEBUG: succeed get order.")
 	if err != nil {
 		m.logger.Warn("failed to GetOrders", zap.Error(err), zap.Any("request", *request))
 		return nil, status.Error(codes.NotFound, "failed to GetOrders")
@@ -339,6 +343,8 @@ func (m *DWH) GetMatchingOrders(ctx context.Context, request *sonm.MatchingOrder
 }
 
 func (m *DWH) GetOrderDetails(ctx context.Context, request *sonm.BigInt) (*sonm.DWHOrder, error) {
+	fmt.Println("DEBUG: insonmnia/dwh/server.go GetOrderDetails called")
+
 	conn := newSimpleConn(m.db)
 	defer conn.Finish()
 
