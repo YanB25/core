@@ -239,18 +239,14 @@ contract Market is Ownable, Pausable {
 
     function CancelOrder(uint orderID) public returns (bool){
         require(
-            orderID <= ordersAmount,
-            "Market.CancelOrder require orderID <= ordersAmount");
+            orderID <= ordersAmount);
         require(
-            orders[orderID].orderStatus == OrderStatus.ORDER_ACTIVE,
-            "Market.CancelOrder require orders[orderID].orderStatus == OrderStatus.ORDER_ACTIVE");
+            orders[orderID].orderStatus == OrderStatus.ORDER_ACTIVE);
         require(
-            orders[orderID].author == msg.sender,
-            "Market.CancelOrder require orders[orderID].author == msg.sender");
+            orders[orderID].author == msg.sender);
 
         require(
-            token.transfer(msg.sender, orders[orderID].frozenSum),
-            "Market.CancelOrder requir token.transfer(msg.sender, orders[orderID].frozenSum)");
+            token.transfer(msg.sender, orders[orderID].frozenSum));
         orders[orderID].orderStatus = OrderStatus.ORDER_INACTIVE;
 
         emit OrderUpdated(orderID);
@@ -260,22 +256,17 @@ contract Market is Ownable, Pausable {
     function QuickBuy(uint askID, uint buyoutDuration) public whenNotPaused {
         Order memory ask = orders[askID];
         require(
-            ask.orderType == OrderType.ORDER_ASK,
-            "Market.QuickBuy require ask.orderType == OrderType.ORDER_ASK");
+            ask.orderType == OrderType.ORDER_ASK);
         require(
-            ask.orderStatus == OrderStatus.ORDER_ACTIVE,
-            "ask.orderStatus == OrderStatus.ORDER_ACTIVE");
+            ask.orderStatus == OrderStatus.ORDER_ACTIVE);
 
         require(
-            ask.duration >= buyoutDuration,
-            "ask.duration >= buyoutDuration");
-        require(pr.GetProfileLevel(msg.sender) >= ask.identityLevel, "pr.GetProfileLevel(msg.sender) >= ask.identityLevel");
+            ask.duration >= buyoutDuration);
+        require(pr.GetProfileLevel(msg.sender) >= ask.identityLevel);
         require(
-            bl.Check(msg.sender, GetMaster(ask.author)) == false && bl.Check(ask.author, msg.sender) == false,
-            "bl.Check(msg.sender, GetMaster(ask.author)) == false && bl.Check(ask.author, msg.sender) == false");
+            bl.Check(msg.sender, GetMaster(ask.author)) == false && bl.Check(ask.author, msg.sender) == false);
         require(
-            bl.Check(ask.blacklist, msg.sender) == false,
-            "bl.Check(ask.blacklist, msg.sender) == false");
+            bl.Check(ask.blacklist, msg.sender) == false);
 
         PlaceOrder(
             OrderType.ORDER_BID,
@@ -298,11 +289,10 @@ contract Market is Ownable, Pausable {
         Order memory bid = orders[_bidID];
 
         require(
-            ask.orderStatus == OrderStatus.ORDER_ACTIVE && bid.orderStatus == OrderStatus.ORDER_ACTIVE,
-            "ask.orderStatus == OrderStatus.ORDER_ACTIVE && bid.orderStatus == OrderStatus.ORDER_ACTIVE");
-        require((ask.counterparty == 0x0 || ask.counterparty == GetMaster(bid.author)) && (bid.counterparty == 0x0 || bid.counterparty == GetMaster(ask.author)), "long sentence 1 in Market.sol");
-        require(ask.orderType == OrderType.ORDER_ASK, "ask.orderType == OrderType.ORDER_AS");
-        require(bid.orderType == OrderType.ORDER_BID, "bid.orderType == OrderType.ORDER_BID");
+            ask.orderStatus == OrderStatus.ORDER_ACTIVE && bid.orderStatus == OrderStatus.ORDER_ACTIVE);
+        require((ask.counterparty == 0x0 || ask.counterparty == GetMaster(bid.author)) && (bid.counterparty == 0x0 || bid.counterparty == GetMaster(ask.author)));
+        require(ask.orderType == OrderType.ORDER_ASK);
+        require(bid.orderType == OrderType.ORDER_BID);
         require(
             bl.Check(bid.blacklist, GetMaster(ask.author)) == false
             && bl.Check(bid.blacklist, ask.author) == false
@@ -310,13 +300,12 @@ contract Market is Ownable, Pausable {
             && bl.Check(bid.author, ask.author) == false
             && bl.Check(ask.blacklist, bid.author) == false
             && bl.Check(GetMaster(ask.author), bid.author) == false
-            && bl.Check(ask.author, bid.author) == false,
-            "very long sentence 2 in Market.sol");
-        require(ask.price <= bid.price, "ask.price <= bid.price");
-        require(ask.duration >= bid.duration, "ask.duration >= bid.duration");
+            && bl.Check(ask.author, bid.author) == false);
+        require(ask.price <= bid.price);
+        require(ask.duration >= bid.duration);
         // profile level check
-        require(pr.GetProfileLevel(bid.author) >= ask.identityLevel, "pr.GetProfileLevel(bid.author) >= ask.identityLevel");
-        require(pr.GetProfileLevel(ask.author) >= bid.identityLevel, "pr.GetProfileLevel(ask.author) >= bid.identityLevel");
+        require(pr.GetProfileLevel(bid.author) >= ask.identityLevel);
+        require(pr.GetProfileLevel(ask.author) >= bid.identityLevel);
 
         if (ask.netflags.length < netflagsQuantity) {
             ask.netflags = ResizeNetflags(ask.netflags);
@@ -329,7 +318,7 @@ contract Market is Ownable, Pausable {
         for (uint i = 0; i < ask.netflags.length; i++) {
             // implementation: when bid contains requirement, ask necessary needs to have this
             // if ask have this one - pass
-            require(!bid.netflags[i] || ask.netflags[i], "!bid.netflags[i] || ask.netflags[i]");
+            require(!bid.netflags[i] || ask.netflags[i]);
         }
 
         if (ask.benchmarks.length < benchmarksQuantity) {
@@ -341,7 +330,7 @@ contract Market is Ownable, Pausable {
         }
 
         for (i = 0; i < ask.benchmarks.length; i++) {
-            require(ask.benchmarks[i] >= bid.benchmarks[i], "ask.benchmarks[i] >= bid.benchmarks[i]");
+            require(ask.benchmarks[i] >= bid.benchmarks[i]);
         }
 
         dealAmount = dealAmount.add(1);
