@@ -332,10 +332,16 @@ func (m *sqlStorage) UpdateOrders(conn queryConn, profile *sonm.Profile) error {
 }
 
 func (m *sqlStorage) GetOrderByID(conn queryConn, orderID *big.Int) (*sonm.DWHOrder, error) {
+	fmt.Println("DEBUG insonmnia/dwh/sql.go GetOrderByID called")
+	fmt.Printf("DEBUG insonmnia/dwh/sql.go GetOrderByID the id is %v\n", orderID)
+
 	query, args, _ := m.builder().Select(m.tablesInfo.OrderColumns...).
 		From("Orders").
 		Where("Id = ?", orderID.String()).
 		ToSql()
+
+	fmt.Printf("DEBUG query statement is:\n%v\n", query)
+
 	rows, err := conn.Query(query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to selectOrderByID: %v", err)
@@ -439,6 +445,10 @@ func (m *sqlStorage) GetOrders(conn queryConn, r *sonm.OrdersRequest) ([]*sonm.D
 }
 
 func (m *sqlStorage) GetMatchingOrders(conn queryConn, r *sonm.MatchingOrdersRequest) ([]*sonm.DWHOrder, uint64, error) {
+	fmt.Println("DEBUG insonmnia/dwh/sql.go GetMatchingOrders called\n")
+	fmt.Printf("DEBUG insonmnia/dwh/sql.go request is: %v\n", r)
+	fmt.Printf("DEBUG insonmnia/dwh/sql.go order id is: %v\n", r.Id.Unwrap())
+
 	order, err := m.GetOrderByID(conn, r.Id.Unwrap())
 	if err != nil {
 		return nil, 0, fmt.Errorf("failed to GetOrderByID: %v", err)

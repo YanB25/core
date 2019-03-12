@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethereum/go-ethereum"
+	ethereum "github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -1490,7 +1490,7 @@ func (api *BasicEventsAPI) getEventsTill(ctx context.Context, filter simpleFilte
 		// we substract one, because of range inclusivity in FilterLogs call
 		// filter.ToBlock = filter.FromBlock + api.blocksBatchSize - 1
 		filter.ToBlock = filter.FromBlock + 10 - 1
-		ctxlog.S(ctx).Debugf("filter.ToBlock: ", filter.ToBlock, ";tillBlock: ", tillBlock)
+		ctxlog.S(ctx).Debugf("filter.ToBlock: %v\ntillBlock%v\n", filter.ToBlock, tillBlock)
 		if filter.ToBlock > tillBlock {
 			filter.ToBlock = tillBlock
 		}

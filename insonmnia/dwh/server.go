@@ -330,6 +330,8 @@ func (m *DWH) GetOrders(ctx context.Context, request *sonm.OrdersRequest) (*sonm
 }
 
 func (m *DWH) GetMatchingOrders(ctx context.Context, request *sonm.MatchingOrdersRequest) (*sonm.DWHOrdersReply, error) {
+	fmt.Println("DEBUG: insonmnia/dwh/server.go GetMatchingOrders called")
+	fmt.Printf("DEBUG: insonmnia/dwh/server.go GetMatchingOrders request: %v\n", request)
 	conn := newSimpleConn(m.db)
 	defer conn.Finish()
 
