@@ -13,7 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	_ "github.com/lib/pq"
 	"github.com/sonm-io/core/blockchain"
-	sonm "github.com/sonm-io/core/proto"
+	"github.com/sonm-io/core/proto"
 	"github.com/sonm-io/core/util"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -295,7 +295,7 @@ func (m *sqlStorage) InsertOrder(conn queryConn, order *sonm.DWHOrder) error {
 	}
 
 	fmt.Println("DEBUG: insonmnia/dwh/sql.go InsertOrder called")
-	fmt.Printf("DEBUG: insonmnia/dwh/sql.go values is %v\n", value)
+	fmt.Printf("DEBUG: insonmnia/dwh/sql.go values is %v\n", values)
 
 	benchmarks := order.GetOrder().GetBenchmarks().GetNValues(m.numBenchmarks)
 
