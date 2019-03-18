@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethereum/go-ethereum"
+	ethereum "github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -1426,7 +1426,10 @@ func (api *BasicEventsAPI) GetEvents(ctx context.Context, filter *EventFilter) (
 			out <- &Event{
 				Data: &ErrorData{Err: err, Topic: "unknown"},
 			}
+			fmt.Printf("!!!!\n!!!!\nDEBUG: blockchain/api.go\n ERR: %v\n", err)
 		}
+		// below line cause `events channel closed`. The channel is closed
+		// only because of errors above
 		close(out)
 	}()
 	return out, nil
@@ -1459,6 +1462,7 @@ func (api *BasicEventsAPI) getLastConfirmedBlock(ctx context.Context) (uint64, e
 
 }
 
+// getEventsRoutine is called by GetEvents, and a channel of events is passed as arg.
 func (api *BasicEventsAPI) getEventsRoutine(ctx context.Context, filter simpleFilter, receiver chan<- *Event) error {
 	tk := util.NewImmediateTicker(blockGenPeriod)
 	for {
@@ -1490,7 +1494,7 @@ func (api *BasicEventsAPI) getEventsTill(ctx context.Context, filter simpleFilte
 		// we substract one, because of range inclusivity in FilterLogs call
 		// filter.ToBlock = filter.FromBlock + api.blocksBatchSize - 1
 		filter.ToBlock = filter.FromBlock + 10 - 1
-		ctxlog.S(ctx).Debugf("filter.ToBlock: ", filter.ToBlock, ";tillBlock: ", tillBlock)
+		ctxlog.S(ctx).Debugf("filter.ToBlock: %v\ntillBlock%v\n", filter.ToBlock, tillBlock)
 		if filter.ToBlock > tillBlock {
 			filter.ToBlock = tillBlock
 		}
@@ -1516,7 +1520,7 @@ func (api *BasicEventsAPI) fetchAndProcessLogs(ctx context.Context, filter simpl
 	var curBlock uint64
 	var curEventTS uint64
 	if len(logs) == 0 {
-		filter.FromBlock = filter.ToBlock + 1
+		// filter.FromBlock = filter.ToBlock + 1
 	} else {
 		for _, log := range logs {
 			if log.BlockNumber != curBlock {

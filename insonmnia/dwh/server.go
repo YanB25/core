@@ -11,12 +11,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/grpc-ecosystem/go-grpc-prometheus"
+    "github.com/grpc-ecosystem/go-grpc-prometheus"
 	_ "github.com/mattn/go-sqlite3"
 	log "github.com/noxiouz/zapctx/ctxlog"
 	"github.com/pkg/errors"
 	"github.com/sonm-io/core/blockchain"
-	"github.com/sonm-io/core/proto"
+	sonm "github.com/sonm-io/core/proto"
 	"github.com/sonm-io/core/util"
 	"github.com/sonm-io/core/util/rest"
 	"github.com/sonm-io/core/util/xgrpc"
@@ -314,10 +314,14 @@ func (m *DWH) GetDealConditions(ctx context.Context, request *sonm.DealCondition
 }
 
 func (m *DWH) GetOrders(ctx context.Context, request *sonm.OrdersRequest) (*sonm.DWHOrdersReply, error) {
+	fmt.Println("DEBUG: insonmnia/dwh/server.go GetOrders called")
+	fmt.Printf("DEBUG: the request is %v\n", request)
+
 	conn := newSimpleConn(m.db)
 	defer conn.Finish()
 
 	orders, count, err := m.storage.GetOrders(conn, request)
+	fmt.Println("DEBUG: succeed get order.")
 	if err != nil {
 		m.logger.Warn("failed to GetOrders", zap.Error(err), zap.Any("request", *request))
 		return nil, status.Error(codes.NotFound, "failed to GetOrders")
@@ -327,6 +331,8 @@ func (m *DWH) GetOrders(ctx context.Context, request *sonm.OrdersRequest) (*sonm
 }
 
 func (m *DWH) GetMatchingOrders(ctx context.Context, request *sonm.MatchingOrdersRequest) (*sonm.DWHOrdersReply, error) {
+	fmt.Println("DEBUG: insonmnia/dwh/server.go GetMatchingOrders called")
+	fmt.Printf("DEBUG: insonmnia/dwh/server.go GetMatchingOrders request: %v\n", request)
 	conn := newSimpleConn(m.db)
 	defer conn.Finish()
 
@@ -340,6 +346,8 @@ func (m *DWH) GetMatchingOrders(ctx context.Context, request *sonm.MatchingOrder
 }
 
 func (m *DWH) GetOrderDetails(ctx context.Context, request *sonm.BigInt) (*sonm.DWHOrder, error) {
+	fmt.Println("DEBUG: insonmnia/dwh/server.go GetOrderDetails called")
+
 	conn := newSimpleConn(m.db)
 	defer conn.Finish()
 
@@ -471,6 +479,8 @@ func (m *DWH) GetStats(ctx context.Context, request *sonm.Empty) (*sonm.DWHStats
 func (m *DWH) GetOrdersByIDs(ctx context.Context, request *sonm.OrdersByIDsRequest) (*sonm.DWHOrdersReply, error) {
 	conn := newSimpleConn(m.db)
 	defer conn.Finish()
+
+	fmt.Printf("DEBUG insonmnia/dwh/server.go: get request %v\n", request)
 
 	orders, count, err := m.storage.GetOrdersByIDs(conn, request)
 	if err != nil {

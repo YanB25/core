@@ -1,5 +1,5 @@
 duration: 8h
-price: 23.73 USD/h
+price: 0 USD/h
 
 blacklist: 0x8125721c2413d99a33e351e1f6bb4e56b6b633fd
 
@@ -10,16 +10,16 @@ identity: anonymous
 resources:
   cpu:
     # Number of cores to assign for this plan, can be fractional
-    cores: 1.5
+    cores: 1
   ram:
-    size: 2GB
+    size: 1GB
   storage:
-    size: 10GB
-  gpu:
-    indexes: [3, 5]
+    size: 1GB
+  # gpu:
+  # indexes: [0, 1]
   network:
-    throughputin: 25 Mbit/s
-    throughputout: 40 Mbit/s
+    throughputin: 1 Mbit/s
+    throughputout: 1 Mbit/s
     overlay: true
     outbound: true
     incoming: true
