@@ -154,6 +154,10 @@ func subAtMost(lhs uint64, rhs uint64) uint64 {
 func (m *AskPlanResources) SubAtMost(resources *AskPlanResources) error {
 	fmt.Printf("[!!]proto/ask_plan.go SubAtMost, check m.GPU:\n%+v\n", m.GPU);
 	//TODO: maybe hack here. let m.GPU = &GPU{} or sth like that.
+	if (m.GPU == nil) {
+		m.GPU = &AskPlanGPU{}
+		fmt.Printf("trying to fix\n")
+	}
 	if err := m.GPU.Sub(resources.GetGPU()); err != nil {
 		return err
 	}
