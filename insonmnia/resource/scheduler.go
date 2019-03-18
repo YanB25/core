@@ -98,8 +98,8 @@ func (m *Scheduler) ConsumeTask(askPlanID string, taskID string, resources *sonm
 		GPU:     deepcopy.Copy(resources.GetGPU()).(*sonm.AskPlanGPU),
 		Storage: deepcopy.Copy(resources.GetStorage()).(*sonm.AskPlanStorage),
 	}
-	fmt.Printf("insonmnia/resource/scheduler.go ConsumeTask copy would be AskPlanResource, it would be\n%v\n", copy)
-	fmt.Printf("insonmnia/resource/scheduler.go testing resources.GetGPU(), which would be res.GPU later\n%v\n%v\n", resources.GetGPU(), deepcopy.Copy(resources.GetGPU()).(*sonm.AskPlanGPU))
+	fmt.Printf("insonmnia/resource/scheduler.go ConsumeTask copy would be AskPlanResource, it would be\n%+v\n", copy)
+	fmt.Printf("insonmnia/resource/scheduler.go testing resources.GetGPU(), which would be res.GPU later\n%+v\n%+v\n", resources.GetGPU(), deepcopy.Copy(resources.GetGPU()).(*sonm.AskPlanGPU))
 
 	m.mu.Lock()
 	defer m.mu.Unlock()

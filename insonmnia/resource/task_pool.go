@@ -54,9 +54,10 @@ func (p *taskPool) pollConsume(resources *sonm.AskPlanResources) error {
 }
 
 func (p *taskPool) getFree() (*sonm.AskPlanResources, error) {
-	fmt.Printf("DEBUG:: insonmnia/resources/task_pool.go getFree: task pool is\n%v\n", *p)
+	fmt.Printf("DEBUG:: insonmnia/resources/task_pool.go getFree: task pool is\n%+v\n", *p)
 	res := deepcopy.Copy(p.all).(*sonm.AskPlanResources)
-	fmt.Printf("DEBUG:: insonmnia/resources/task_pool.go before calling sub: resources is :\n%v\n", res)
+	fmt.Printf("DEBUG:: insonmnia/resources/task_pool.go before calling sub: resources is :\n%+v\n", res)
+	fmt.Printf("DEBUG:: insonmnia/resources/task_pool.go and GPU is %+v\n", res.GPU)
 	usage, err := p.getUsage()
 	if err != nil {
 		return nil, err
