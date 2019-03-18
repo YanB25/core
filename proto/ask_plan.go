@@ -151,6 +151,7 @@ func subAtMost(lhs uint64, rhs uint64) uint64 {
 
 // This function substracts as much resources as it can
 func (m *AskPlanResources) SubAtMost(resources *AskPlanResources) error {
+	printf("[!!]proto/ask_plan.go SubAtMost, check m.GPU:\n%v\n", m.GPU);
 	if err := m.GPU.Sub(resources.GetGPU()); err != nil {
 		return err
 	}
@@ -317,6 +318,8 @@ func (m *AskPlanGPU) SubAtMost(other *AskPlanGPU) error {
 	for _, dev := range other.GetHashes() {
 		delete(result, dev)
 	}
+	printf("I want to know what is m: \n%v\n", m)
+	printf("before calling restoreFromSet, arg result is:\n%v\n", result)
 	m.restoreFromSet(result)
 	return nil
 
@@ -347,8 +350,11 @@ func (m *AskPlanGPU) deviceSet() map[string]struct{} {
 }
 
 func (m *AskPlanGPU) restoreFromSet(from map[string]struct{}) {
+	printf("DEBUG:: proto/ask_plan.go restoreFromSet arg from is\n%v\n", from)
 	m.Hashes = make([]string, 0, len(from))
+	println("DEBUG control flow 1");
 	for dev := range from {
+		printf("DEBUG control flow for, %v\n", dev);
 		m.Hashes = append(m.GetHashes(), dev)
 	}
 }
