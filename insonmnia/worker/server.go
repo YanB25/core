@@ -676,7 +676,9 @@ func (m *Worker) StartTask(ctx context.Context, request *sonm.StartTaskRequest) 
 		spec.Resources = &sonm.AskPlanResources{}
 	}
 	if spec.GetResources().GetGPU() == nil {
+		fmt.Println("insonmnia/worker/server.go StartTask: spec.GetResources().GetGPU() == nil")
 		spec.Resources.GPU = ask.Resources.GPU
+		fmt.Printf("insonmnia/worker/server.go StartTask: spec.GPU is\n%v\n, ask.GPU is\n%v\n", spec.Resources.GPU, ask.Resources.GPU)
 	}
 
 	hasher := &sonm.AskPlanHasher{AskPlanResources: ask.GetResources()}

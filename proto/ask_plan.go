@@ -99,6 +99,7 @@ func (m *AskPlanResources) initNilWithZero() {
 		m.Storage.Size = &DataSize{}
 	}
 	if m.GPU == nil {
+		fmt.Println("DEBUG: core/proto/ask_plan.go: initNilWithZero, so AskPlanResources.GPU should not be nil, but be &AskPlanGPU{}")
 		m.GPU = &AskPlanGPU{}
 	}
 	if m.GPU.Hashes == nil {
