@@ -45,7 +45,7 @@ export const secInDay = 86400;
 export const secInHour = 3600;
 
 export const defaultBenchmarks = [40, 21, 2, 256, 160, 1000, 1000, 6, 3, 1200, 1860000, 3000];
-export const benchmarkQuantity = 13;
+export const benchmarkQuantity = 15;
 export const netflagsQuantity = 3;
 
 // response tuples mappings

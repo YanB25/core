@@ -1,0 +1,25 @@
+duration: 8h
+price: 0 USD/h
+
+blacklist: 0x8125721c2413d99a33e351e1f6bb4e56b6b633fd
+
+# optional - restricts selling resources only to specified address
+# counterparty: 0x8125721c2413d99a33e351e1f6bb4e56b6b61567
+identity: anonymous
+
+resources:
+  cpu:
+    # Number of cores to assign for this plan, can be fractional
+    cores: 1
+  ram:
+    size: 1GB
+  storage:
+    size: 1GB
+  # gpu:
+  # indexes: [0, 1]
+  network:
+    throughputin: 1 Mbit/s
+    throughputout: 1 Mbit/s
+    overlay: true
+    outbound: true
+    incoming: true
