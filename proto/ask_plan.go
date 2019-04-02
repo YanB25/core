@@ -99,6 +99,7 @@ func (m *AskPlanResources) initNilWithZero() {
 		m.Storage.Size = &DataSize{}
 	}
 	if m.GPU == nil {
+		fmt.Println("DEBUG: core/proto/ask_plan.go: initNilWithZero, so AskPlanResources.GPU should not be nil, but be &AskPlanGPU{}")
 		m.GPU = &AskPlanGPU{}
 	}
 	if m.GPU.Hashes == nil {
@@ -151,6 +152,12 @@ func subAtMost(lhs uint64, rhs uint64) uint64 {
 
 // This function substracts as much resources as it can
 func (m *AskPlanResources) SubAtMost(resources *AskPlanResources) error {
+	fmt.Printf("[!!]proto/ask_plan.go SubAtMost, check m.GPU:\n%+v\n", m.GPU);
+	//TODO: maybe hack here. let m.GPU = &GPU{} or sth like that.
+	if (m.GPU == nil) {
+		m.GPU = &AskPlanGPU{}
+		fmt.Printf("trying to fix\n")
+	}
 	if err := m.GPU.Sub(resources.GetGPU()); err != nil {
 		return err
 	}
@@ -317,6 +324,8 @@ func (m *AskPlanGPU) SubAtMost(other *AskPlanGPU) error {
 	for _, dev := range other.GetHashes() {
 		delete(result, dev)
 	}
+	fmt.Printf("I want to know what is m: \n%v\n", m)
+	fmt.Printf("before calling restoreFromSet, arg result is:\n%v\n", result)
 	m.restoreFromSet(result)
 	return nil
 
@@ -347,8 +356,11 @@ func (m *AskPlanGPU) deviceSet() map[string]struct{} {
 }
 
 func (m *AskPlanGPU) restoreFromSet(from map[string]struct{}) {
+	fmt.Printf("DEBUG:: proto/ask_plan.go restoreFromSet arg from is\n%v\n", from)
 	m.Hashes = make([]string, 0, len(from))
+	println("DEBUG control flow 1");
 	for dev := range from {
+		fmt.Printf("DEBUG control flow for, %v\n", dev);
 		m.Hashes = append(m.GetHashes(), dev)
 	}
 }

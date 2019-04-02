@@ -657,7 +657,8 @@ func (m *Worker) StartTask(ctx context.Context, request *sonm.StartTaskRequest) 
 	}
 
 	spec := request.GetSpec()
-
+	fmt.Printf("insonmnia/worker/server.go StartTask: spec = request.GetSpec, showing spec\n%v\n", spec)
+	fmt.Printf("also, showing request\n%v\n", request)
 	publicKey := PublicKey{}
 	err = publicKey.UnmarshalText([]byte(spec.GetContainer().GetSshKey()))
 	if err != nil {
@@ -674,10 +675,17 @@ func (m *Worker) StartTask(ctx context.Context, request *sonm.StartTaskRequest) 
 	}
 	if spec.GetResources() == nil {
 		spec.Resources = &sonm.AskPlanResources{}
+		fmt.Println("insonmnia/worker/server.go StartTask: spec.GetResources() == nil, so mannualy initial it. maybe but, why not use newer to construct one?")
 	}
 	if spec.GetResources().GetGPU() == nil {
+		fmt.Println("insonmnia/worker/server.go StartTask: spec.GetResources().GetGPU() == nil")
 		spec.Resources.GPU = ask.Resources.GPU
+		fmt.Printf("insonmnia/worker/server.go StartTask: spec.GPU is\n%v\n, ask.GPU is\n%v\n", spec.Resources.GPU, ask.Resources.GPU)
+	} else {
+		fmt.Printf("insonmnia/worker/server.go StartTask: original spec.GetResources().GetGPU() is not nil. it is `%v`\n", spec.GetResources().GetGPU())
 	}
+	fmt.Printf("!! insonmnia/worker/server.go StartTask: spec.Resources is %+v\n", spec.Resources)
+	fmt.Printf("!! insonmnia/worker/server.go StartTask: spec.Resources.GPU is %+v\n", spec.Resources.GPU)
 
 	hasher := &sonm.AskPlanHasher{AskPlanResources: ask.GetResources()}
 	err = spec.GetResources().GetGPU().Normalize(hasher)
